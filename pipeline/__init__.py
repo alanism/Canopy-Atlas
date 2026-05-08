@@ -1,0 +1,1 @@
+"""Canopy Atlas pipeline package."""

@@ -1,0 +1,55 @@
+# Public placeholder deployment contract for Canopy Atlas.
+#
+# Replace all values before deploying. This file documents service separation
+# only; it intentionally contains no private project IDs or service accounts.
+
+project_id: YOUR_PROJECT_ID
+region: YOUR_REGION
+
+services:
+  api:
+    name: canopy-atlas-api
+    service_account: canopy-atlas-api@YOUR_PROJECT_ID.iam.gserviceaccount.com
+    image: YOUR_REGION-docker.pkg.dev/YOUR_PROJECT_ID/canopy-atlas/api:TAG
+    notes:
+      - Serves /v0/* benchmark endpoints.
+      - API service account must hold no BigQuery write roles.
+      - Must not hold BigQuery write roles.
+
+  dashboard:
+    name: canopy-atlas-dashboard
+    service_account: canopy-atlas-dashboard@YOUR_PROJECT_ID.iam.gserviceaccount.com
+    image: YOUR_REGION-docker.pkg.dev/YOUR_PROJECT_ID/canopy-atlas/dashboard:TAG
+    notes:
+      - Serves static dashboard assets.
+      - May proxy read-only /v0/* paths to the API.
+
+  agent_proxy:
+    name: canopy-agent-proxy
+    service_account: canopy-agent-proxy@YOUR_PROJECT_ID.iam.gserviceaccount.com
+    image: YOUR_REGION-docker.pkg.dev/YOUR_PROJECT_ID/canopy-atlas/agent-proxy:TAG
+    notes:
+      - Optional paid AgentCash/x402 proxy.
+      - Requires verifier/admin secrets supplied outside the repo.
+
+  orchestrator:
+    name: canopy-atlas-orchestrator
+    service_account: canopy-atlas-orchestrator@YOUR_PROJECT_ID.iam.gserviceaccount.com
+    image: YOUR_REGION-docker.pkg.dev/YOUR_PROJECT_ID/canopy-atlas/api:TAG
+    internal_path: /internal/run
+    required_env:
+      - ATLAS_ORCHESTRATOR_TOKEN
+    notes:
+      - Disabled unless ATLAS_ORCHESTRATOR_TOKEN is configured.
+      - Use least-privilege write access only when an external adapter needs it.
+
+iam_boundaries:
+  - principal: canopy-atlas-api@YOUR_PROJECT_ID.iam.gserviceaccount.com
+    allowed: cache/read
+    forbidden: warehouse/write
+  - principal: canopy-atlas-dashboard@YOUR_PROJECT_ID.iam.gserviceaccount.com
+    allowed: api/read-proxy
+    forbidden: warehouse/read
+  - principal: canopy-atlas-orchestrator@YOUR_PROJECT_ID.iam.gserviceaccount.com
+    allowed: dataset-scoped/write
+    target: YOUR_DATASET

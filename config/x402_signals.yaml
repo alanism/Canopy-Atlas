@@ -1,0 +1,8 @@
+version: 1
+status: unavailable
+x402_signal_source_available: false
+protocol_type_fallback: unknown
+x402_signal_status: unavailable
+dashboard_title_fallback: Observed Stablecoin Route Benchmark
+demo_framing_approved: false
+signals: []

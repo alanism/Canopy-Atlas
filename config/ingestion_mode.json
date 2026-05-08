@@ -1,0 +1,14 @@
+{
+  "ingestion_mode": "adapter",
+  "upstream_contract_passed": true,
+  "x402_signal_source_available": false,
+  "missing_fields": [],
+  "target_tables": [
+    "upstream_evidence_contract_v1"
+  ],
+  "upstream_match_rate": 1.0,
+  "upstream_last_validated_at": "sample-fixture",
+  "upstream_validation_status": "validated",
+  "token_symbol_check_passed": true,
+  "decision_notes": "Public sample mode uses the generic fixture-backed upstream adapter. External data sources can implement the same contract without changing request-path APIs."
+}

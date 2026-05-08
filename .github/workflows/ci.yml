@@ -1,0 +1,48 @@
+name: Canopy Atlas CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+
+      - name: Core Python checks
+        run: |
+          make doctor
+          make lint-phase0
+          python3 -m unittest discover -s tests/unit
+
+      - name: Dashboard checks
+        working-directory: dashboard
+        run: |
+          npm ci
+          npm audit --audit-level=moderate
+          npm run build
+
+      - name: Public sanitization grep gate
+        run: |
+          if rg -n "Project DG|project_dg|canopy-main|canopy_prod_us|@canopysystems.xyz|Devan|alan_approved" \
+            --glob '!.github/**' \
+            --glob '!dashboard/node_modules/**' \
+            --glob '!dashboard/dist/**' \
+            --glob '!dashboard/package-lock.json' \
+            .; then
+            echo "Private or internal term found in public release surface" >&2
+            exit 1
+          fi

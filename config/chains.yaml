@@ -1,0 +1,22 @@
+version: 1
+v0_targets:
+  - chain: ethereum
+    family: evm
+    token_symbol: PYUSD
+    decimals: 6
+    upstream_contract_view: upstream_evidence_contract_v1
+  - chain: ethereum
+    family: evm
+    token_symbol: USDT
+    decimals: 6
+    upstream_contract_view: upstream_evidence_contract_v1
+  - chain: solana
+    family: svm
+    token_symbol: PYUSD
+    decimals: 6
+    upstream_contract_view: upstream_evidence_contract_v1
+  - chain: solana
+    family: svm
+    token_symbol: USDT
+    decimals: 6
+    upstream_contract_view: upstream_evidence_contract_v1

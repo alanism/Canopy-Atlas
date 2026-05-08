@@ -1,0 +1,9 @@
+version: 1
+status: pending_human_seed
+d3_gate:
+  required_for_public_x402_route_claims: true
+  minimum_confirmed_entries: 1
+  current_confirmed_entries: 0
+  public_launch_blocked: true
+  sample_benchmark_demo_allowed: true
+labels: []

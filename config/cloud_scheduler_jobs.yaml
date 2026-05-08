@@ -1,0 +1,35 @@
+# Phase 9 Cloud Scheduler -> private Cloud Run service configuration.
+# The target URI is the service URL plus /internal/run, not a Cloud Run Job API URL.
+
+jobs:
+  - name: x402-short-window
+    schedule: "*/5 * * * *"
+    time_zone: "UTC"
+    http_method: POST
+    uri: "${CANOPY_ORCHESTRATOR_BASE_URL}/internal/run"
+    oidc_service_account_email: "${CANOPY_SCHEDULER_SERVICE_ACCOUNT}"
+    oidc_audience: "${CANOPY_ORCHESTRATOR_BASE_URL}"
+    body:
+      trigger_source: scheduler
+      cadence: short
+      windows:
+        - 15m
+        - 1h
+      chain: solana
+      stablecoin: PYUSD
+
+  - name: x402-long-window
+    schedule: "0 * * * *"
+    time_zone: "UTC"
+    http_method: POST
+    uri: "${CANOPY_ORCHESTRATOR_BASE_URL}/internal/run"
+    oidc_service_account_email: "${CANOPY_SCHEDULER_SERVICE_ACCOUNT}"
+    oidc_audience: "${CANOPY_ORCHESTRATOR_BASE_URL}"
+    body:
+      trigger_source: scheduler
+      cadence: long
+      windows:
+        - 24h
+        - 7d
+      chain: solana
+      stablecoin: PYUSD
